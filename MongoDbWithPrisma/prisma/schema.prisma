@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model roles {
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  user users[]
+}
+
+model users {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String?
+  lastName  String?
+  username  String?
+  password  String?
+  email     String?
+  role      roles    @relation(fields: [roleId], references: [id])
+  roleId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+model authentications {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  token String? @unique
+}
+
+model animes {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  title        String?
+  description  String?
+  poster       String?
+  type         String?
+  releaseDate  DateTime       @db.Date
+  status       String?
+  slug         String?
+  published    Boolean?
+  anime_genres anime_genres[]
+  episodes     episodes[]
+  createdAt    DateTime       @default(now())
+}
+
+model genres {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String?
+  anime_genres anime_genres[]
+}
+
+model anime_genres {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  anime   animes @relation(fields: [animeId], references: [id])
+  genre   genres @relation(fields: [genreId], references: [id])
+  animeId String @db.ObjectId
+  genreId String @db.ObjectId
+}
+
+model episodes {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  numEpisode Int      @db.Int
+  source360p String?
+  source480p String?
+  source720p String?
+  result360p String?
+  result480p String?
+  result720p String?
+  anime      animes   @relation(fields: [animeId], references: [id])
+  animeId    String   @db.ObjectId
+  published  Boolean?
+  createdAt  DateTime @default(now())
+}
+
+model carousel {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  description String?
+  type        String?
+  slug        String?
+  poster      String?
+  background  String?
+  episodes    Int?
+  releaseDate DateTime @db.Date()
+  animeId     String   @db.ObjectId
+  published   Boolean?
+  createdAt   DateTime @default(now())
+}

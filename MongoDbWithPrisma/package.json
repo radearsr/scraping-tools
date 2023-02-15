@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@prisma/client": "^4.10.1",
+    "dotenv": "^16.0.3",
+    "mysql": "^2.18.1",
+    "prisma": "^4.10.1"
+  }
+}
